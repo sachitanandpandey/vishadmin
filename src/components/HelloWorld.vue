@@ -1,0 +1,223 @@
+<template>
+  <v-app id="app">
+      <v-content>
+          <v-container fluid fill-height>
+              <v-card max-width="800" height="400" class="d-flex justify-space-around mb-6">
+                  <v-container>
+                      <v-row dense>
+                          <v-col cols="20">
+                              <v-card color="#385F73" theme="dark" height="100%" width="800">
+                                <form @submit.prevent="submit">
+                                  <v-row>
+                                    <v-col>
+                                      <input v-model="data.title" label='title' class="form-control" placeholder="Title" required id="ip1">
+                                      <input v-model="data.desc" label='desc' class="form-control" placeholder="Description" required id="ip2">
+                                      <input v-model="data.status" label='status' class="form-control" placeholder="Status" required id="ip1">
+                                      <v-file-input label="File input" v-model="data.listposter" type='File' class="form-control" required id="ip2"></v-file-input>
+                                      <v-file-input label="File input" v-model="data.fullposter" type='File' class="form-control" required id="ip2"></v-file-input>
+                                      <!-- <input v-model="data.listposter" type='File' label='ListPoster' class="form-control" required id="ip2"> -->
+                                      <!-- <v-file-input accept="image/*" label="File input"></v-file-input> -->
+
+                                    </v-col>
+                                </v-row>
+                                  <v-btn rounded color="primary" dark type="submit">
+                                    upload
+                                  </v-btn>
+                                </form>
+
+                              </v-card>
+                          </v-col>
+                      </v-row>
+                  </v-container>
+              </v-card>
+          </v-container>
+
+      </v-content>
+      <template>
+          <v-container>
+          <v-row >
+            <div v-for="item in data.doclist" v-bind:key="item.id">
+              <v-card max-width="200" height="300">
+                  <v-list-item three-line>
+                      <v-list-item-content>
+                          <div class="text-overline mb-4">
+                              {{item.title}}
+                          </div>
+                          <v-list-item-title class="text-h5 mb-1">
+                              Headline 5
+                          </v-list-item-title>
+                          <v-list-item-subtitle>Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>
+                      </v-list-item-content>
+
+                      <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
+                  </v-list-item>
+
+                  <v-card-actions>
+                      <v-btn outlined rounded text>
+                          Button
+                      </v-btn>
+                  </v-card-actions>
+              </v-card>
+            </div>
+          </v-row>
+
+      </v-container>
+      </template>
+  </v-app>
+</template>
+
+<script>
+import { reactive, onMounted } from 'vue'
+import router from '../router'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { db } from '../main'
+import { collection, addDoc, where, query, doc, setDoc, getDocs } from 'firebase/firestore'
+import { getStorage, uploadBytesResumable, getDownloadURL, ref } from 'firebase/storage'
+
+export default {
+  name: 'Home',
+
+  setup () {
+    const data = reactive({
+      submit: '',
+      doclist: '',
+      title: '',
+      desc: '',
+      status: '',
+      file: '',
+      listposter: '',
+      fullposter: ''
+    })
+
+    // const doclist = ref('')
+    onMounted(async () => {
+      const querySnapshot = await getDocs(collection(db, 'projects'))
+      data.doclist = querySnapshot.docs.map(doc => doc.data())
+    })
+
+    const submit = async () => {
+      const storage = getStorage()
+
+      // Create the file metadata
+      /** @type {any} */
+      const metadata = {
+        contentType: 'image/jpeg'
+      }
+
+      const storageReflist = ref(storage, 'project_images/' + data.title + '/' + data.listposter.name)
+      const storageReffull = ref(storage, 'project_images/' + data.title + '/' + data.fullposter.name)
+      const uploadlistposter = await uploadBytesResumable(storageReflist, data.listposter, metadata)
+      const uploadfullposter = await uploadBytesResumable(storageReffull, data.fullposter, metadata)
+
+      const listPosterUrl = await getDownloadURL(uploadlistposter.ref)
+      console.log(listPosterUrl)
+
+      const fullPosterUrl = await getDownloadURL(uploadfullposter.ref)
+      console.log(fullPosterUrl)
+      const colRef = collection(db, 'projects')
+
+      setDoc(doc(colRef, data.title), {
+        title: data.title,
+        desc: data.desc,
+        status: data.status,
+        listposter: listPosterUrl,
+        fullposter: fullPosterUrl
+
+      })
+    }
+
+    return {
+      data,
+      submit
+    }
+  }
+}
+</script>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+body {
+  background-color: #0066CC;
+}
+
+.form-signin {
+  padding-top: 25px;
+  width: 100%;
+  max-width: 930px;
+  padding: 255px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type="user"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#ip2 {
+  border-radius: 25px;
+  border: 2px solid #609;
+  padding: 20px;
+  width: 400px;
+  height: 15px;
+}
+
+#ip1 {
+  border-radius: 25px;
+  border: 2px solid #609;
+  padding: 20px;
+  width: 400px;
+  height: 15px;
+}
+
+#arrowlogin {
+  background: linear-gradient(-135deg,
+          transparent 22px,
+          #04e6fb 22px,
+          #65ff9a 100%) top right,
+      linear-gradient(-45deg,
+          transparent 22px,
+          #04e6fb 22px,
+          #65ff9a 100%) bottom right;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+#weekdropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#app {
+  background: url('../assets/V2.png') no-repeat center center fixed !important;
+  background-size: cover;
+}
+</style>
