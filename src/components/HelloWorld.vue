@@ -44,7 +44,7 @@
           <h4 class="text-h5 white--text">Projected</h4>
         </v-row>
         <v-row>
-          <div v-for="item in data.doclist" v-bind:key="item.id">
+          <div v-for="item in data.doclist" v-bind:key="item.id" class="pa-md-2">
             <v-card max-width="200" height="300">
               <v-img :src=item.listposter class="white--text align-end"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="300px" width="200px">
