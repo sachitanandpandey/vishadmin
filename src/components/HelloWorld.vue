@@ -1,68 +1,84 @@
 <template>
   <v-app id="app">
-      <v-content>
-          <v-container fluid fill-height>
-              <v-card max-width="800" height="400" class="d-flex justify-space-around mb-6">
-                  <v-container>
-                      <v-row dense>
-                          <v-col cols="20">
-                              <v-card color="#385F73" theme="dark" height="100%" width="800">
-                                <form @submit.prevent="submit">
-                                  <v-row>
-                                    <v-col>
-                                      <input v-model="data.title" label='title' class="form-control" placeholder="Title" required id="ip1">
-                                      <input v-model="data.desc" label='desc' class="form-control" placeholder="Description" required id="ip2">
-                                      <input v-model="data.status" label='status' class="form-control" placeholder="Status" required id="ip1">
-                                      <v-file-input label="File input" v-model="data.listposter" type='File' class="form-control" required id="ip2"></v-file-input>
-                                      <v-file-input label="File input" v-model="data.fullposter" type='File' class="form-control" required id="ip2"></v-file-input>
-                                      <!-- <input v-model="data.listposter" type='File' label='ListPoster' class="form-control" required id="ip2"> -->
-                                      <!-- <v-file-input accept="image/*" label="File input"></v-file-input> -->
-
-                                    </v-col>
-                                </v-row>
-                                  <v-btn rounded color="primary" dark type="submit">
-                                    upload
-                                  </v-btn>
-                                </form>
-
-                              </v-card>
-                          </v-col>
-                      </v-row>
-                  </v-container>
-              </v-card>
-          </v-container>
-
-      </v-content>
-      <template>
+    <v-content>
+      <v-container fluid fill-height>
+        <v-card max-width="800" height="400" class="d-flex justify-space-around mb-6">
           <v-container>
-          <v-row >
-            <div v-for="item in data.doclist" v-bind:key="item.id">
-              <v-card max-width="200" height="300">
-                  <v-list-item three-line>
-                      <v-list-item-content>
-                          <div class="text-overline mb-4">
-                              {{item.title}}
-                          </div>
-                          <v-list-item-title class="text-h5 mb-1">
-                              Headline 5
-                          </v-list-item-title>
-                          <v-list-item-subtitle>Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>
-                      </v-list-item-content>
+            <v-row dense>
+              <v-col cols="20">
+                <v-card color="#385F73" theme="dark" height="100%" width="800">
+                  <form @submit.prevent="submit">
+                    <v-row>
+                      <v-col>
+                        <input v-model="data.title" label='title' class="form-control" placeholder="Title" required
+                          id="ip1">
+                        <input v-model="data.desc" label='desc' class="form-control" placeholder="Description" required
+                          id="ip2">
+                        <input v-model="data.status" label='status' class="form-control" placeholder="Status" required
+                          id="ip1">
+                        <v-file-input label="File input" v-model="data.listposter" type='File' class="form-control"
+                          required id="ip2"></v-file-input>
+                        <v-file-input label="File input" v-model="data.fullposter" type='File' class="form-control"
+                          required id="ip2"></v-file-input>
+                        <!-- <input v-model="data.listposter" type='File' label='ListPoster' class="form-control" required id="ip2"> -->
+                        <!-- <v-file-input accept="image/*" label="File input"></v-file-input> -->
 
-                      <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
-                  </v-list-item>
+                      </v-col>
+                    </v-row>
+                    <v-btn rounded color="primary" dark type="submit">
+                      upload
+                    </v-btn>
+                  </form>
 
-                  <v-card-actions>
-                      <v-btn outlined rounded text>
-                          Button
-                      </v-btn>
-                  </v-card-actions>
-              </v-card>
-            </div>
-          </v-row>
-
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
       </v-container>
-      </template>
+
+    </v-content>
+    <template>
+      <v-container>
+        <v-row>
+          <h4 class="text-h5 white--text">Projected</h4>
+        </v-row>
+        <v-row>
+          <div v-for="item in data.doclist" v-bind:key="item.id">
+            <v-card max-width="200" height="300">
+              <v-img :src=item.listposter class="white--text align-end"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="300px" width="200px">
+                <v-card-actions>
+                  <v-btn rounded color="primary" dark @click="pupdate(item)">
+                    Edit
+                  </v-btn>
+                  <v-btn rounded color="red" dark @click="pdelete(item)">
+                    Delete
+                  </v-btn>
+                </v-card-actions>
+              </v-img>
+              <!-- <v-list-item three-line>
+                                                <v-list-item-content>
+                                                    <div class="text-overline mb-4">
+                                                        {{item.title}}
+                                                    </div>
+                                                    <v-list-item-title class="text-h5 mb-1">
+                                                        {{item.status}}
+                                                    </v-list-item-title>
+                                                    <v-list-item-subtitle>{{item.desc}}</v-list-item-subtitle>
+                                                </v-list-item-content>
+                                                <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
+                                            </v-list-item>
+                                            <v-card-actions>
+                                                <v-btn outlined rounded text>
+                                                    Button
+                                                </v-btn>
+                                            </v-card-actions> -->
+            </v-card>
+          </div>
+        </v-row>
+      </v-container>
+    </template>
   </v-app>
 </template>
 
@@ -71,7 +87,7 @@ import { reactive, onMounted } from 'vue'
 import router from '../router'
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { db } from '../main'
-import { collection, addDoc, where, query, doc, setDoc, getDocs } from 'firebase/firestore'
+import { collection, addDoc, where, query, doc, setDoc, getDocs, deleteDoc } from 'firebase/firestore'
 import { getStorage, uploadBytesResumable, getDownloadURL, ref } from 'firebase/storage'
 
 export default {
@@ -124,13 +140,38 @@ export default {
         fullposter: fullPosterUrl
 
       })
+      const querySnapshotProjects = await getDocs(collection(db, 'projects'))
+      data.doclist = querySnapshotProjects.docs.map(doc => doc.data())
+
+      data.title = ''
+      data.desc = ''
+      data.status = ''
+      data.listposter = ''
+      data.fullposter = ''
+    }
+
+    const pupdate = async (item) => {
+      data.title = item.title
+      data.desc = item.desc
+      data.status = item.status
+      data.listposter = ''
+      data.fullposter = ''
+    }
+
+    const pdelete = async (item) => {
+      await deleteDoc(doc(db, 'projects', item.title))
+      const querySnapshotProjects = await getDocs(collection(db, 'projects'))
+      data.doclist = querySnapshotProjects.docs.map(doc => doc.data())
     }
 
     return {
       data,
-      submit
+      submit,
+      pupdate,
+      pdelete
     }
   }
+
 }
 </script>
 
@@ -200,13 +241,13 @@ body {
 
 #arrowlogin {
   background: linear-gradient(-135deg,
-          transparent 22px,
-          #04e6fb 22px,
-          #65ff9a 100%) top right,
-      linear-gradient(-45deg,
-          transparent 22px,
-          #04e6fb 22px,
-          #65ff9a 100%) bottom right;
+      transparent 22px,
+      #04e6fb 22px,
+      #65ff9a 100%) top right,
+    linear-gradient(-45deg,
+      transparent 22px,
+      #04e6fb 22px,
+      #65ff9a 100%) bottom right;
   background-size: 100% 50%;
   background-repeat: no-repeat;
 }
