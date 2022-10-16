@@ -15,7 +15,7 @@
                         <input v-model="data.desc" label='desc' class="form-control" placeholder="Description" required
                           id="ip2">
                           <v-col class="d-flex" cols="12" sm="12">
-                            <v-select :items="StatusOptions" label="Status" solo></v-select>
+                            <v-select v-model="data.status" :items="StatusOptions" label="Status" solo></v-select>
                           </v-col>
                         <!-- <input v-model="data.status" label='status' class="form-control" placeholder="Status" required
                           id="ip1"> -->
@@ -91,7 +91,7 @@ export default {
       fullposter: ''
     })
 
-    const StatusOptions = ['Projected', 'Premiere', 'InProgress', 'Completed']
+    const StatusOptions = ['Projected', 'Premiering', 'InProgress', 'Completed']
 
     // const doclist = ref('')
     onMounted(async () => {
