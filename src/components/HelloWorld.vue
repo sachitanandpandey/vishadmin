@@ -14,8 +14,11 @@
                           id="ip1">
                         <input v-model="data.desc" label='desc' class="form-control" placeholder="Description" required
                           id="ip2">
-                        <input v-model="data.status" label='status' class="form-control" placeholder="Status" required
-                          id="ip1">
+                          <v-col class="d-flex" cols="12" sm="12">
+                            <v-select :items="StatusOptions" label="Status" solo></v-select>
+                          </v-col>
+                        <!-- <input v-model="data.status" label='status' class="form-control" placeholder="Status" required
+                          id="ip1"> -->
                         <v-file-input label="File input" v-model="data.listposter" type='File' class="form-control"
                           required id="ip2"></v-file-input>
                         <v-file-input label="File input" v-model="data.fullposter" type='File' class="form-control"
@@ -57,23 +60,6 @@
                   </v-btn>
                 </v-card-actions>
               </v-img>
-              <!-- <v-list-item three-line>
-                                                <v-list-item-content>
-                                                    <div class="text-overline mb-4">
-                                                        {{item.title}}
-                                                    </div>
-                                                    <v-list-item-title class="text-h5 mb-1">
-                                                        {{item.status}}
-                                                    </v-list-item-title>
-                                                    <v-list-item-subtitle>{{item.desc}}</v-list-item-subtitle>
-                                                </v-list-item-content>
-                                                <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
-                                            </v-list-item>
-                                            <v-card-actions>
-                                                <v-btn outlined rounded text>
-                                                    Button
-                                                </v-btn>
-                                            </v-card-actions> -->
             </v-card>
           </div>
         </v-row>
@@ -104,6 +90,8 @@ export default {
       listposter: '',
       fullposter: ''
     })
+
+    const StatusOptions = ['Projected', 'Premiere', 'InProgress', 'Completed']
 
     // const doclist = ref('')
     onMounted(async () => {
@@ -168,7 +156,8 @@ export default {
       data,
       submit,
       pupdate,
-      pdelete
+      pdelete,
+      StatusOptions
     }
   }
 
