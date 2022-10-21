@@ -14,6 +14,8 @@
                           id="ip1">
                         <input v-model="data.desc" label='desc' class="form-control" placeholder="Description" required
                           id="ip2">
+                        <input v-model="data.duration" label='duration' class="form-control" placeholder="Duration" required
+                          id="ip2">
                           <v-col class="d-flex" cols="12" sm="12">
                             <v-select v-model="data.status" :items="StatusOptions" label="Status" solo></v-select>
                           </v-col>
@@ -23,6 +25,8 @@
                           required id="ip2"></v-file-input>
                         <v-file-input label="File input" v-model="data.fullposter" type='File' class="form-control"
                           required id="ip2"></v-file-input>
+                        <input v-model="data.link" label='link' class="form-control" placeholder="iframe link" required
+                          id="ip3">
                         <!-- <input v-model="data.listposter" type='File' label='ListPoster' class="form-control" required id="ip2"> -->
                         <!-- <v-file-input accept="image/*" label="File input"></v-file-input> -->
 
@@ -88,7 +92,9 @@ export default {
       status: '',
       file: '',
       listposter: '',
-      fullposter: ''
+      fullposter: '',
+      duration: '',
+      link: ''
     })
 
     const StatusOptions = ['Projected', 'Premiering', 'InProgress', 'Completed']
@@ -125,7 +131,9 @@ export default {
         desc: data.desc,
         status: data.status,
         listposter: listPosterUrl,
-        fullposter: fullPosterUrl
+        fullposter: fullPosterUrl,
+        duration: data.duration,
+        link: data.link
 
       })
       const querySnapshotProjects = await getDocs(collection(db, 'projects'))
@@ -136,6 +144,8 @@ export default {
       data.status = ''
       data.listposter = ''
       data.fullposter = ''
+      data.duration = ''
+      data.link = ''
     }
 
     const pupdate = async (item) => {
@@ -144,6 +154,8 @@ export default {
       data.status = item.status
       data.listposter = ''
       data.fullposter = ''
+      data.duration = ''
+      data.link = ''
     }
 
     const pdelete = async (item) => {
@@ -217,6 +229,14 @@ body {
   border: 2px solid #609;
   padding: 20px;
   width: 400px;
+  height: 15px;
+}
+
+#ip3 {
+  border-radius: 25px;
+  border: 2px solid #609;
+  padding: 20px;
+  width: 100%;
   height: 15px;
 }
 
