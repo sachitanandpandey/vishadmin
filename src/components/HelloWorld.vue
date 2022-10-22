@@ -2,11 +2,11 @@
   <v-app id="app">
     <v-content>
       <v-container fluid fill-height>
-        <v-card max-width="800" height="400" class="d-flex justify-space-around mb-6">
+        <v-card max-width="100%" height="100%" class="d-flex justify-space-around mb-6">
           <v-container>
             <v-row dense>
               <v-col cols="20">
-                <v-card color="#385F73" theme="dark" height="100%" width="800">
+                <v-card color="#385F73" theme="dark" height="100%" width="100%">
                   <form @submit.prevent="submit">
                     <v-row>
                       <v-col>
@@ -21,11 +21,16 @@
                           </v-col>
                         <!-- <input v-model="data.status" label='status' class="form-control" placeholder="Status" required
                           id="ip1"> -->
+                        <v-h5>Listposter</v-h5>
                         <v-file-input label="File input" v-model="data.listposter" type='File' class="form-control"
                           required id="ip2"></v-file-input>
+                          <v-h5>fullposter</v-h5>
                         <v-file-input label="File input" v-model="data.fullposter" type='File' class="form-control"
                           required id="ip2"></v-file-input>
-                        <input v-model="data.link" label='link' class="form-control" placeholder="iframe link" required
+                          <v-h5>Audition</v-h5>
+                        <v-file-input label="File input" v-model="data.audition" type='File' class="form-control"
+                          required id="ip2"></v-file-input>
+                        <input v-model="data.link" label='link' class="form-control" placeholder="iframe link"
                           id="ip3">
                         <!-- <input v-model="data.listposter" type='File' label='ListPoster' class="form-control" required id="ip2"> -->
                         <!-- <v-file-input accept="image/*" label="File input"></v-file-input> -->
@@ -94,7 +99,8 @@ export default {
       listposter: '',
       fullposter: '',
       duration: '',
-      link: ''
+      link: '',
+      audition: ''
     })
 
     const StatusOptions = ['Projected', 'Premiering', 'InProgress', 'Completed']
@@ -116,14 +122,22 @@ export default {
 
       const storageReflist = ref(storage, 'project_images/' + data.title + '/' + data.listposter.name)
       const storageReffull = ref(storage, 'project_images/' + data.title + '/' + data.fullposter.name)
+      const storageRefaudi = ref(storage, 'project_images/' + data.title + '/' + data.audition.name)
       const uploadlistposter = await uploadBytesResumable(storageReflist, data.listposter, metadata)
       const uploadfullposter = await uploadBytesResumable(storageReffull, data.fullposter, metadata)
+      const uploadaudiposter = await uploadBytesResumable(storageRefaudi, data.audition, metadata)
 
       const listPosterUrl = await getDownloadURL(uploadlistposter.ref)
       console.log(listPosterUrl)
 
       const fullPosterUrl = await getDownloadURL(uploadfullposter.ref)
       console.log(fullPosterUrl)
+      const audiPosterUrl = await getDownloadURL(uploadaudiposter.ref)
+      console.log(audiPosterUrl)
+      let link = ''
+      if (data.link) { link = data.link } else {
+        link = ''
+      }
       const colRef = collection(db, 'projects')
 
       setDoc(doc(colRef, data.title), {
@@ -133,7 +147,8 @@ export default {
         listposter: listPosterUrl,
         fullposter: fullPosterUrl,
         duration: data.duration,
-        link: data.link
+        link: link,
+        audition: audiPosterUrl
 
       })
       const querySnapshotProjects = await getDocs(collection(db, 'projects'))
@@ -154,7 +169,7 @@ export default {
       data.status = item.status
       data.listposter = ''
       data.fullposter = ''
-      data.duration = ''
+      data.duration = item.duration
       data.link = ''
     }
 
