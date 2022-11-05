@@ -21,12 +21,12 @@
                           </v-col> -->
                         <!-- <input v-model="data.status" label='status' class="form-control" placeholder="Status" required
                           id="ip1"> -->
-                          <!-- <v-img :src=previewimg class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                          <v-img :src=data.previewimg class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                               height="300px" width="200px">
-                          </v-img> -->
+                          </v-img>
                         <v-h5>defaultProfile</v-h5>
                         <v-file-input label="File input" v-model="data.defaultProfile" type='File' class="form-control"
-                          required id="ip2"></v-file-input>
+                          required id="ip2" @change="onFileChange(data.defaultProfile)"></v-file-input>
                           <!-- <v-h5>fullposter</v-h5>
                         <v-file-input label="File input" v-model="data.fullposter" type='File' class="form-control"
                           required id="ip2"></v-file-input>
@@ -94,7 +94,8 @@ export default {
   setup () {
     const data = reactive({
       submit: '',
-      doclist: ''
+      doclist: '',
+      previewimg: ''
     //   title: '',
     //   desc: '',
     //   status: '',
@@ -185,11 +186,21 @@ export default {
       data.doclist = querySnapshotProjects.docs.map(doc => doc.data())
     }
 
+    const onFileChange = async (file) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        data.previewimg = e.target.result
+      }
+      reader.readAsDataURL(file)
+    //   data.previewimg = file.name
+    }
+
     return {
       data,
       submit,
       pupdate,
-      pdelete
+      pdelete,
+      onFileChange
     //   StatusOptions
     }
   }
