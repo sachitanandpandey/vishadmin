@@ -25,6 +25,11 @@
                           <v-col class="d-flex" cols="12" sm="12">
                             <v-select v-model="data.status" :items="StatusOptions" label="Status" solo></v-select>
                           </v-col>
+                          <v-div v-if="data.status == 'InProgress'">
+                            <v-col class="d-flex" cols="12" sm="12">
+                            <v-select v-model="data.casting" :items="CastingStatus" label="Status" solo></v-select>
+                          </v-col>
+                          </v-div>
                         <!-- <input v-model="data.status" label='status' class="form-control" placeholder="Status" required
                           id="ip1"> -->
                         <v-h5>Listposter</v-h5>
@@ -37,7 +42,12 @@
                         <v-file-input label="File input" v-model="data.audition" type='File' class="form-control"
                           required id="ip2"></v-file-input>
                         <input v-model="data.link" label='link' class="form-control" placeholder="iframe link"
-                          id="ip3">
+                            id="ip3">
+                        <v-col class="d-flex" cols="12" sm="12">
+                          <v-select v-model="data.ispaid" :items="PayOptions" label="IsPaid" solo></v-select>
+                        </v-col>
+                        <input v-model="data.price" label='price' class="form-control" placeholder="Ticket Price"
+                            id="ip3">
                         <!-- <input v-model="data.listposter" type='File' label='ListPoster' class="form-control" required id="ip2"> -->
                         <!-- <v-file-input accept="image/*" label="File input"></v-file-input> -->
 
@@ -106,10 +116,17 @@ export default {
       fullposter: '',
       duration: '',
       link: '',
-      audition: ''
+      audition: '',
+      casting: '',
+      ispaid: '',
+      price: ''
     })
 
     const StatusOptions = ['Projected', 'Premiering', 'InProgress', 'Completed']
+
+    const PayOptions = [true, false]
+
+    const CastingStatus = ['NotStarted', 'Open', 'Close']
 
     // const doclist = ref('')
     onMounted(async () => {
@@ -154,11 +171,23 @@ export default {
         fullposter: fullPosterUrl,
         duration: data.duration,
         link: link,
-        audition: audiPosterUrl
+        audition: audiPosterUrl,
+        casting: data.casting,
+        ispaid: data.ispaid,
+        price: data.price
 
       })
       const querySnapshotProjects = await getDocs(collection(db, 'projects'))
       data.doclist = querySnapshotProjects.docs.map(doc => doc.data())
+
+      if (data.casting === 'Open') {
+        const colRef = collection(db, 'casting')
+
+        setDoc(doc(colRef, data.title), {
+          audition: audiPosterUrl,
+          casting: data.casting
+        })
+      }
 
       data.title = ''
       data.desc = ''
@@ -190,7 +219,9 @@ export default {
       submit,
       pupdate,
       pdelete,
-      StatusOptions
+      StatusOptions,
+      CastingStatus,
+      PayOptions
     }
   }
 

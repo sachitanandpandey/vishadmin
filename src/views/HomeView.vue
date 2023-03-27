@@ -11,6 +11,11 @@ export default Vue.extend({
 
   components: {
     HelloWorld
+  },
+  computed: {
+    currentUser () {
+      return this.$store.getters.getUser
+    }
   }
 })
 </script>
